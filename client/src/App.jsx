@@ -5,70 +5,77 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Editor from './pages/Editor';
+import { PenTool } from 'lucide-react';
 
 const MainApp = () => {
   const { user, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState('login');
   const [selectedDocId, setSelectedDocId] = useState(null);
 
-  // Sync route status based on auth changes
   useEffect(() => {
     if (!loading) {
       if (user) {
-        if (currentPage === 'login' || currentPage === 'register') {
-          setCurrentPage('dashboard');
-        }
+        if (currentPage === 'login' || currentPage === 'register') setCurrentPage('dashboard');
       } else {
-        if (currentPage !== 'login' && currentPage !== 'register') {
-          setCurrentPage('login');
-        }
+        if (currentPage !== 'login' && currentPage !== 'register') setCurrentPage('login');
       }
     }
   }, [user, loading]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-500"></div>
-        <p className="text-slate-400 text-xs mt-3 uppercase tracking-wider font-semibold">Validating session...</p>
+      <div className="min-h-screen bg-surface-900 flex flex-col items-center justify-center gap-6 relative overflow-hidden">
+        {/* Ambient glow */}
+        <div className="absolute inset-0 dot-grid opacity-40 pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col items-center gap-6">
+          {/* Spinning ring + logo */}
+          <div className="relative flex items-center justify-center">
+            <div className="absolute w-20 h-20 rounded-full border border-teal-500/20 animate-spin" style={{ animationDuration: '3s' }} />
+            <div className="absolute w-28 h-28 rounded-full border border-teal-500/10 animate-spin" style={{ animationDuration: '5s', animationDirection: 'reverse' }} />
+            <div className="relative bg-gradient-to-br from-teal-500 to-emerald-600 p-4 rounded-2xl shadow-2xl shadow-teal-500/30">
+              <PenTool size={28} className="text-white" />
+            </div>
+          </div>
+
+          <div className="text-center">
+            <p className="text-sm font-bold text-slate-300 tracking-widest uppercase">
+              PDF<span className="text-teal-400">Sign</span>
+            </p>
+            <p className="text-xs text-slate-600 mt-1.5 tracking-wider">Validating session...</p>
+          </div>
+
+          {/* Animated dots */}
+          <div className="flex gap-1.5">
+            {[0, 1, 2].map(i => (
+              <div
+                key={i}
+                className="w-1.5 h-1.5 rounded-full bg-teal-500/40 animate-bounce"
+                style={{ animationDelay: `${i * 0.15}s` }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
   const renderPage = () => {
     switch (currentPage) {
-      case 'login':
-        return <Login setCurrentPage={setCurrentPage} />;
-      case 'register':
-        return <Register setCurrentPage={setCurrentPage} />;
+      case 'login':    return <Login setCurrentPage={setCurrentPage} />;
+      case 'register': return <Register setCurrentPage={setCurrentPage} />;
       case 'dashboard':
-        return (
-          <Dashboard 
-            setCurrentPage={setCurrentPage} 
-            setSelectedDocId={setSelectedDocId} 
-          />
-        );
+        return <Dashboard setCurrentPage={setCurrentPage} setSelectedDocId={setSelectedDocId} />;
       case 'editor':
-        return (
-          <Editor 
-            docId={selectedDocId} 
-            setCurrentPage={setCurrentPage} 
-          />
-        );
-      default:
-        return <Login setCurrentPage={setCurrentPage} />;
+        return <Editor docId={selectedDocId} setCurrentPage={setCurrentPage} />;
+      default:         return <Login setCurrentPage={setCurrentPage} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
-      {/* Navbar only shown when logged in */}
-      {user && (
-        <Navbar 
-          setCurrentPage={setCurrentPage} 
-          currentPage={currentPage} 
-        />
-      )}
+    <div className="min-h-screen bg-surface-900 flex flex-col">
+      {user && <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />}
       <main className="flex-1">
         {renderPage()}
       </main>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { PenTool, LogOut, LayoutDashboard, User } from 'lucide-react';
+import { PenTool, LogOut, LayoutDashboard, User, ChevronDown, Zap } from 'lucide-react';
 
 const Navbar = ({ setCurrentPage, currentPage }) => {
   const { user, logout } = useAuth();
@@ -11,51 +11,69 @@ const Navbar = ({ setCurrentPage, currentPage }) => {
   };
 
   return (
-    <nav className="glass sticky top-0 z-50 border-b border-white/5 py-4 px-6 md:px-12 flex justify-between items-center">
-      <div 
-        onClick={() => user ? setCurrentPage('dashboard') : setCurrentPage('login')} 
-        className="flex items-center gap-2.5 cursor-pointer group"
-      >
-        <div className="bg-brand-500 text-white p-2 rounded-xl group-hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20">
-          <PenTool size={20} className="transform group-hover:rotate-12 transition-transform" />
-        </div>
-        <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-brand-400 bg-clip-text text-transparent">
-          PDF<span className="text-brand-400 font-medium">Sign</span>
-        </span>
-      </div>
-
-      {user && (
-        <div className="flex items-center gap-6">
-          <button
-            onClick={() => setCurrentPage('dashboard')}
-            className={`flex items-center gap-2 text-sm font-medium transition-colors ${
-              currentPage === 'dashboard' ? 'text-brand-400' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <LayoutDashboard size={16} />
-            <span>Dashboard</span>
-          </button>
-          
-          <div className="h-4 w-px bg-white/10" />
-
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-2 text-xs bg-slate-900 border border-white/5 rounded-full pl-2 pr-3 py-1">
-              <div className="bg-brand-500/20 text-brand-400 p-1 rounded-full">
-                <User size={12} />
-              </div>
-              <span className="text-slate-300 font-medium">{user.name}</span>
+    <nav className="sticky top-0 z-50 glass border-b border-teal-500/10">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
+        {/* Logo */}
+        <div
+          onClick={() => user ? setCurrentPage('dashboard') : setCurrentPage('login')}
+          className="flex items-center gap-3 cursor-pointer group"
+        >
+          <div className="relative">
+            <div className="absolute inset-0 bg-teal-500/30 rounded-xl blur-md group-hover:blur-lg transition-all" />
+            <div className="relative bg-gradient-to-br from-teal-500 to-emerald-600 text-white p-2 rounded-xl shadow-lg">
+              <PenTool size={18} className="group-hover:rotate-12 transition-transform duration-300" />
             </div>
-            
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 text-xs font-semibold bg-red-950/20 hover:bg-red-900/30 text-red-400 border border-red-900/30 rounded-lg px-3 py-1.5 transition-all active:scale-95"
-            >
-              <LogOut size={13} />
-              <span className="hidden sm:inline">Logout</span>
-            </button>
           </div>
+          <div className="flex items-baseline gap-0.5">
+            <span className="text-lg font-bold tracking-tight text-white">PDF</span>
+            <span className="text-lg font-bold tracking-tight gradient-text">Sign</span>
+          </div>
+          <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold bg-teal-500/10 border border-teal-500/20 text-teal-400 px-2 py-0.5 rounded-full">
+            <Zap size={9} />
+            PRO
+          </span>
         </div>
-      )}
+
+        {/* Nav Right */}
+        {user && (
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Dashboard Link */}
+            <button
+              onClick={() => setCurrentPage('dashboard')}
+              className={`flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-200 ${
+                currentPage === 'dashboard'
+                  ? 'text-teal-400 bg-teal-500/10 border border-teal-500/20'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+              }`}
+            >
+              <LayoutDashboard size={15} />
+              <span className="hidden sm:inline">Dashboard</span>
+            </button>
+
+            {/* Divider */}
+            <div className="h-5 w-px bg-teal-500/10" />
+
+            {/* User Chip */}
+            <div className="flex items-center gap-2">
+              <div className="hidden sm:flex items-center gap-2.5 bg-surface-800 border border-teal-500/10 hover:border-teal-500/20 rounded-xl px-3 py-1.5 transition-colors cursor-default">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white text-[10px] font-bold shadow-sm">
+                  {user.name?.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-xs font-medium text-slate-300">{user.name}</span>
+              </div>
+
+              <button
+                onClick={handleLogout}
+                title="Logout"
+                className="flex items-center gap-1.5 text-xs font-semibold bg-red-950/20 hover:bg-red-900/30 text-red-400 border border-red-900/20 hover:border-red-700/40 rounded-xl px-3 py-1.5 transition-all active:scale-95"
+              >
+                <LogOut size={13} />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </nav>
   );
 };

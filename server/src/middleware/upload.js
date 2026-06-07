@@ -19,9 +19,19 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter (PDF only)
+// File filter (PDF only) - robust check for mimetype or file extension
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'application/pdf') {
+  const fileExtension = path.extname(file.originalname).toLowerCase();
+  const allowedMimeTypes = [
+    'application/pdf',
+    'application/x-pdf',
+    'application/acrobat',
+    'applications/vnd.pdf',
+    'text/pdf',
+    'text/x-pdf'
+  ];
+
+  if (allowedMimeTypes.includes(file.mimetype) || fileExtension === '.pdf') {
     cb(null, true);
   } else {
     cb(new Error('Only PDF files are allowed!'), false);
@@ -31,7 +41,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  limits: { fileSize: 15 * 1024 * 1024 }, // Increase limit to 15MB
 });
 
 module.exports = upload;
