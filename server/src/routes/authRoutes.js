@@ -47,6 +47,10 @@ router.post('/register', async (req, res) => {
     }
   } catch (error) {
     console.error(error);
+    if (error.name === 'ValidationError') {
+      const message = Object.values(error.errors).map(val => val.message).join(', ');
+      return res.status(400).json({ message });
+    }
     res.status(500).json({ message: 'Server error' });
   }
 });

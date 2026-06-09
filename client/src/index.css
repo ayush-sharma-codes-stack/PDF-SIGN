@@ -267,3 +267,9 @@
   background: rgba(71, 85, 105, 0.1);
   border-color: rgba(71, 85, 105, 0.2);
 }
+
+.badge-rejected {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.08);
+  border-color: rgba(248, 113, 113, 0.2);
+}

@@ -74,7 +74,7 @@ const Login = ({ setCurrentPage }) => {
         <div className="absolute top-0 right-0 w-72 h-72 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-emerald-600/4 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="w-full max-w-md relative z-10">
+        <div className="w-full max-w-md relative z-10 bg-surface-800/80 border border-teal-500/10 rounded-2xl p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
           {/* Header */}
           <div className="mb-10">
             <div className="flex items-center gap-2 mb-6">

@@ -4,20 +4,25 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 
-// ── Ensure uploads directory exists on startup ──────────────────────────────
+// ── Ensure upload directories exist on startup ───────────────────────────────
 const uploadsDir = path.join(__dirname, '../uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-  console.log(`📁 Created uploads directory: ${uploadsDir}`);
-}
+const signedDir  = path.join(__dirname, '../uploads/signed');
+
+[uploadsDir, signedDir].forEach((dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+    console.log(`📁 Created directory: ${dir}`);
+  }
+});
 
 // ── DB ──────────────────────────────────────────────────────────────────────
 const connectDB = require('./config/db');
 
 // ── Routes ──────────────────────────────────────────────────────────────────
-const authRoutes = require('./routes/authRoutes');
-const docRoutes  = require('./routes/docRoutes');
-const sigRoutes  = require('./routes/sigRoutes');
+const authRoutes  = require('./routes/authRoutes');
+const docRoutes   = require('./routes/docRoutes');
+const sigRoutes   = require('./routes/sigRoutes');
+const auditRoutes = require('./routes/auditRoutes');
 
 // ── App ──────────────────────────────────────────────────────────────────────
 const app = express();
@@ -35,8 +40,12 @@ app.use(cors({
 
 // Body parsers — must come before routes
 // NOTE: multipart/form-data is handled by multer in the route, not here
-app.use(express.json({ limit: '20mb' }));           // for base64 signature images
+app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
+
+// ── Static — serve signed PDFs publicly ──────────────────────────────────────
+// Accessible at: GET /signed/<filename>
+app.use('/signed', express.static(signedDir));
 
 // ── Health Check ─────────────────────────────────────────────────────────────
 app.get('/health', (req, res) => {
@@ -45,6 +54,7 @@ app.get('/health', (req, res) => {
     message: 'PDF Signer API is running',
     timestamp: new Date().toISOString(),
     uploadsDir: fs.existsSync(uploadsDir),
+    signedDir: fs.existsSync(signedDir),
   });
 });
 
@@ -52,6 +62,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth',       authRoutes);
 app.use('/api/docs',       docRoutes);
 app.use('/api/signatures', sigRoutes);
+app.use('/api/audit',      auditRoutes);
 
 // ── 404 Handler ──────────────────────────────────────────────────────────────
 app.use((req, res, next) => {
@@ -72,5 +83,6 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
-  console.log(`📂 Uploads dir: ${uploadsDir}`);
+  console.log(`📂 Uploads dir:      ${uploadsDir}`);
+  console.log(`✍️  Signed PDFs dir:  ${signedDir}`);
 });

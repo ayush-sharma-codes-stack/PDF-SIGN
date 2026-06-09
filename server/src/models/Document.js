@@ -19,6 +19,11 @@ const DocumentSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    // Path to the final signed copy (written when all fields are signed)
+    signedFilePath: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

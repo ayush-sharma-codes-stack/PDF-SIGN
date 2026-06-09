@@ -27,7 +27,7 @@ const SignatureSchema = new mongoose.Schema(
       height: {
         type: Number,
         default: 50,
-      }
+      },
     },
     signerInfo: {
       name: {
@@ -39,23 +39,48 @@ const SignatureSchema = new mongoose.Schema(
         required: true,
       },
     },
+    // ── Status ─────────────────────────────────────────────────────────────
     status: {
       type: String,
-      enum: ['pending', 'signed'],
+      enum: ['pending', 'signed', 'rejected'],
       default: 'pending',
     },
+    rejectionReason: {
+      type: String,
+      default: null,
+    },
+    // ── Signature content ──────────────────────────────────────────────────
     signatureData: {
-      type: String, // Base64 dataURL of drawing or font name for text
+      type: String, // Base64 dataURL of drawing or typed text
       default: null,
     },
     signatureType: {
-      type: String, // 'draw' or 'text'
+      type: String, // 'draw' | 'text'
       default: null,
     },
     signedAt: {
       type: Date,
       default: null,
-    }
+    },
+    // ── Signed file output ─────────────────────────────────────────────────
+    signedFileUrl: {
+      type: String, // relative URL served from /signed/<filename>
+      default: null,
+    },
+    // ── Invite token (Day 9) ───────────────────────────────────────────────
+    inviteToken: {
+      type: String,
+      default: null,
+      index: true,
+    },
+    inviteTokenExpiry: {
+      type: Date,
+      default: null,
+    },
+    inviteSentAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

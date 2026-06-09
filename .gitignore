@@ -7,7 +7,8 @@ package-lock.json
 **/.env.local
 **/.env.development.local
 **/.env.test.local
-**/.env.production.local
+# NOTE: .env.production is intentionally NOT ignored
+# so Vercel can read the production API URL during build
 
 # Server uploads
 server/uploads/
