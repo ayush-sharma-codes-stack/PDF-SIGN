@@ -4,6 +4,7 @@ services:
     env: node
     region: singapore
     plan: free
+    rootDir: server
     buildCommand: npm install
     startCommand: npm start
     envVars:
@@ -11,12 +12,18 @@ services:
         value: production
       - key: PORT
         value: 5000
-      - key: MONGO_URI
+      - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
         sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
       - key: CLIENT_URL
         sync: false
+      - key: EMAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: 587
       - key: EMAIL_USER
         sync: false
       - key: EMAIL_PASS
