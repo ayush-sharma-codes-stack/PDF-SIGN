@@ -8,8 +8,15 @@ import {
   Shield, Mail, ChevronRight, Eye, Trash2
 } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000/api'
+    : 'https://pdf-sign-12xc.onrender.com/api');
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000'
+    : 'https://pdf-sign-12xc.onrender.com');
 
 // ── Status helpers ───────────────────────────────────────────────────────────
 const getDocStatus = (sigs = []) => {
