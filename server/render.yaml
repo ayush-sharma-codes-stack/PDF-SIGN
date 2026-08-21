@@ -13,18 +13,18 @@ services:
       - key: PORT
         value: 5000
       - key: MONGODB_URI
-        sync: false
+        value: mongodb+srv://aayushsharma4518_db_user:BVSckEXJUPLORpwj@cluster0.crlzopw.mongodb.net/pdf_signer?appName=Cluster0
       - key: JWT_SECRET
-        sync: false
+        value: myPDFsignerSecret2024!@#
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: CLIENT_URL
-        sync: false
+        value: https://pdf-sign-azure.vercel.app
       - key: EMAIL_HOST
         value: smtp.gmail.com
       - key: EMAIL_PORT
         value: 587
       - key: EMAIL_USER
-        sync: false
+        value: aayushsharmahrx@gmail.com
       - key: EMAIL_PASS
         sync: false

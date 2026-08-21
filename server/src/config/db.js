@@ -1,14 +1,21 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
+  const uri = process.env.MONGODB_URI;
+
+  if (!uri) {
+    console.error('❌ MONGODB_URI environment variable is not set!');
+    process.exit(1);
+  }
+
   try {
-    const mongoURI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/pdf_signer';
-    const conn = await mongoose.connect(mongoURI);
+    const conn = await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 10000,
+    });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`❌ Error connecting to MongoDB: ${error.message}`);
-    // Don't exit the process — let Render restart handle it if needed
-    // process.exit(1);
+    console.error(`❌ MongoDB connection failed: ${error.message}`);
+    process.exit(1);
   }
 };
 
